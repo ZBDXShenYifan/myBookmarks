@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .wrapper{
+            text-align: center;
+        }
+
+        .keyboards{
+            display: inline-block;
+            border: 1px solid green;
+            margin-top: 150px;
+        }
+
+        .keyElement{
+            height: 100px;
+            width: 100px;
+            border: 1px solid red;
+            text-align: center;
+            box-sizing: border-box;
+            line-height: 100px;
+            display: inline-block;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="wrapper" id="wrapper">
+        <div class="keyboards" id="keyboards"></div>
+    </div>
+</body>
+<script>
+    let keyboards = document.getElementById('keyboards');
+    let keyElement = document.createElement("div");
+    let keys = [
+        ['Q','W','E','R','T','Y','U','I','O','P'],
+        ['A','S','D','F','G','H','J','K','L'],
+        ['Z','X','C','V','B','N','M']
+    ];
+
+    let hashKeyHref = {
+      'q':'qq.com',
+      'z':'zhihu.com',
+      'b':'baidu.com',
+    };
+
+    for(let i = 0; i < keys.length; i++){
+        let aKeyLine = document.createElement('div');
+        for(let j = 0; j < keys[i].length; j++){
+            let keyElement = document.createElement('div');
+            keyElement.textContent = keys[i][j];
+            keyElement.className = "keyElement";
+
+            aKeyLine.appendChild(keyElement);
+        }
+
+        keyboards.appendChild(aKeyLine);
+    }
+
+    document.onkeypress = function (event) {
+        console.log(event.key);
+        console.log();
+        if(hashKeyHref[event.key]){
+            window.open("https://www." + hashKeyHref[event.key]);
+        }else {
+            console.log('当前字母没有绑定网址');
+        }
+
+    }
+</script>
+</html>

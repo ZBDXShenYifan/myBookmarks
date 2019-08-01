@@ -3,72 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <style>
-        .wrapper{
-            text-align: center;
-        }
-
-        .keyboards{
-            display: inline-block;
-            border: 1px solid green;
-            margin-top: 150px;
-        }
-
-        .keyElement{
-            height: 100px;
-            width: 100px;
-            border: 1px solid red;
-            text-align: center;
-            box-sizing: border-box;
-            line-height: 100px;
-            display: inline-block;
-        }
-
-
-    </style>
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
     <div class="wrapper" id="wrapper">
-        <div class="keyboards" id="keyboards"></div>
+        <div class="keyboards" id="keyboards">
+
+        </div>
     </div>
 </body>
 <script>
-    let keyboards = document.getElementById('keyboards');
-    let keyElement = document.createElement("div");
-    let keys = [
-        ['Q','W','E','R','T','Y','U','I','O','P'],
-        ['A','S','D','F','G','H','J','K','L'],
-        ['Z','X','C','V','B','N','M']
-    ];
 
-    let hashKeyHref = {
-      'q':'qq.com',
-      'z':'zhihu.com',
-      'b':'baidu.com',
-    };
+    // 1. 初始化
+    let hashAndKey = init();
+    let keys = hashAndKey.keys;
+    let hashKeyHref = hashAndKey.hashKeyHref;
 
-    for(let i = 0; i < keys.length; i++){
-        let aKeyLine = document.createElement('div');
-        for(let j = 0; j < keys[i].length; j++){
-            let keyElement = document.createElement('div');
-            keyElement.textContent = keys[i][j];
-            keyElement.className = "keyElement";
 
-            aKeyLine.appendChild(keyElement);
+    //2. 生成键盘
+    createKeyBoard(keys, hashKeyHref);
+    
+    //3.按键页面导航
+    listenKeyOnPress(hashKeyHref);
+    
+    //创建键盘
+    function createKeyBoard(keys, hashKeyHref) {
+        let keyboards = document.getElementById('keyboards');
+        // let keyElement = document.createElement("div");
+        for(let i = 0; i < keys.length; i++){
+            let aKeyLine = tag('div', {className: 'keyLine'}); 
+            // aKeyLine.className = 'keyLine';
+            for(let j = 0; j < keys[i].length; j++){
+                let keyElement = createKeyElement(keys[i][j], hashKeyHref); //创建一个键
+                aKeyLine.appendChild(keyElement);
+            }
+            keyboards.appendChild(aKeyLine);
         }
+    }
+    
+    
+    function createKeyElement(key, hashKeyHref) {
+        let keyElement = tag('div', {textContent: key, className: 'keyElement'});
+        let iconImg = tag("img", {className:"iconImg"});
+        if(hashKeyHref[keyElement.textContent.toLowerCase()]){
+            iconImg.src = "//www." +  hashKeyHref[keyElement.textContent.toLowerCase()] + "/favicon.ico";
+        }else{
+            iconImg.src = "pointer.png";
+        }
+        iconImg.onerror = function(event){
+            event.target.src = "pointer.png"
+        };
 
-        keyboards.appendChild(aKeyLine);
+        let editBtn = createEditBtn(keyElement.textContent.toLowerCase(),hashKeyHref);
+
+        keyElement.appendChild(iconImg);
+        keyElement.appendChild(editBtn);
+
+        return keyElement;
     }
 
-    document.onkeypress = function (event) {
-        console.log(event.key);
-        console.log();
-        if(hashKeyHref[event.key]){
-            window.open("https://www." + hashKeyHref[event.key]);
-        }else {
-            console.log('当前字母没有绑定网址');
+    function createEditBtn(btnId, hashKeyHref){
+        let editBtn = tag('button', {className:"editBtn",textContent:"编辑", id:btnId});
+        editBtn.onclick = function(event){
+            let bindURL = prompt("输入要绑定的网址");
+            hashKeyHref[this.id] = bindURL;
+            let bindImg = this.previousSibling;
+            bindImg.src = 'http://' + bindURL + '/favicon.ico';
+            bindImg.onerror = function (e) {
+                e.target.src = 'pointer.png'
+            };
+            localStorage.setItem('zzz', JSON.stringify(hashKeyHref));
+            console.log(hashKeyHref);
+            console.log(btnId, hashKeyHref[this.id]);
+        };
+        return editBtn;
+    }
+    
+    function listenKeyOnPress(hashKeyHref) {
+        document.onkeypress = function (event) {
+            if(hashKeyHref[event.key]){
+                window.open("https://www." + hashKeyHref[event.key], '_blank');
+            }
+        };
+    }
+
+
+    function init(){
+        let keys = [
+            ['Q','W','E','R','T','Y','U','I','O','P'],
+            ['A','S','D','F','G','H','J','K','L'],
+            ['Z','X','C','V','B','N','M']
+        ];
+
+        let hashKeyHref = {
+            'q':'qq.com',
+            'z':'zhihu.com',
+            'b':'baidu.com',
+        };
+
+        let hashInLocalStorage = getHashFromLocal('zzz');
+        if(hashInLocalStorage){
+            hashKeyHref = hashInLocalStorage;
         }
 
+        return {
+            "keys":keys,
+            "hashKeyHref":hashKeyHref
+        }
+    }
+
+    function getHashFromLocal(name) {
+        return JSON.parse(localStorage.getItem(name) || 'null');
+    }
+    
+    function tag(tagName, attributes) {
+        let element = document.createElement(tagName);
+        for(let key in attributes){
+            element[key] = attributes[key];
+        }
+        return element;
     }
 </script>
 </html>

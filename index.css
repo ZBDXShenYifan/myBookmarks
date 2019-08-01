@@ -1,0 +1,81 @@
+body{
+    background: gray url("wallhaven-2ekj19.png") center center;
+    background-size: cover;
+}
+
+.wrapper{
+    text-align: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.keyboards{
+    display: inline-block;
+    /*border: 1px solid green;*/
+    background-color: rgba(255,255,255,0.3);
+    border-radius: 10px;
+}
+
+.keyElement{
+    height: 70px;
+    width: 70px;
+    /*border: 1px solid red;*/
+    text-align: center;
+    box-sizing: border-box;
+    line-height: 70px;
+    display: inline-block;
+    background: linear-gradient(to top, #ffffff 0%,#f3f3f3 1%,#ffffff 100%);
+    box-shadow:0 5px 0 #9C9C9C, 2px 3px 8px #000000, -2px 9px 10px #000000;
+    border-radius: 5px;
+    font-family: Helvetica;
+    margin: 0 7px;
+    font-size: 20px;
+    position: relative;
+}
+
+
+
+.keyLine{
+    margin: 20px;
+}
+
+.keyLine:last-child{
+    margin-bottom: 30px;
+}
+
+.keyElement .editBtn{
+    position: absolute;
+    font-size: 8px;
+    right: 2px;
+    bottom: 2px;
+    border-radius: 5px;
+    padding: 1px;
+    color: #ffffff;
+    display: none;
+    cursor: pointer;
+    background-color: #000000;
+    border: 1px solid transparent;  //自定义边框
+outline: none;    //消除默认点击蓝色边框效果
+}
+
+.keyElement:hover .editBtn{
+    display: inline-block;
+}
+
+/*.keyElement:hover {*/
+/*margin-top: 3px;*/
+/*box-shadow:0 2px 0 #9C9C9C, 2px 3px 8px #000000, -2px 13px 8px #000000;*/
+/*}*/
+
+.keyElement .iconImg{
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+    border-radius: 50%;
+    box-shadow: 0 1px 2px #333 inset;
+}
